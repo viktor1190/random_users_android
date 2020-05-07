@@ -17,12 +17,28 @@
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/tasksFragment">
+    app:startDestination="@id/userListFragment">
 
     <fragment
-        android:id="@+id/tasksFragment"
-        android:name="com.example.android.architecture.blueprints.randomuser.tasks.TasksFragment"
-        android:label="@string/app_name">
+        android:id="@+id/userListFragment"
+        android:name="com.example.android.architecture.blueprints.randomuser.users.UserListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_user_list">
+        <action
+            android:id="@+id/action_userListFragment_to_userDetailFragment"
+            app:destination="@id/userDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDetailFragment"
+        android:name="com.example.android.architecture.blueprints.randomuser.userdetail.UserDetailFragment"
+        android:label="UserDetailFragment" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_userDetailFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
     </fragment>
 </navigation>
