@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -14,23 +15,17 @@
             type="com.example.android.architecture.blueprints.randomuser.users.UserListViewModel" />
     </data>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/listPreferredItemHeight"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/list_item_padding"
-        android:paddingTop="@dimen/list_item_padding"
+    <FrameLayout
+        android:background="@color/colorAccent"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:onClick="@{() -> viewmodel.openUser(user.id)}">
-
-<!--        <CheckBox-->
-<!--            android:id="@+id/complete"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center_vertical"-->
-<!--            android:onClick="@{(view) -> viewmodel.completeTask(user, ((CompoundButton)view).isChecked())}"-->
-<!--            android:checked="@{user.completed}" />-->
+        
+        <ImageView
+            android:id="@+id/image_item_user_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:profileImage="@{user.pictureThumbnailUrl}"/>
 
         <TextView
             android:id="@+id/title"
@@ -41,5 +36,5 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:text="@{user.titleForList}" />
-    </LinearLayout>
+    </FrameLayout>
 </layout>

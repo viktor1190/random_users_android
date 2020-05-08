@@ -63,4 +63,5 @@ ext {
     truthVersion = '0.44'
     retrofitVersion = '2.8.1'
     stethoVersion = '1.5.1'
+    glideVersion = '4.11.0'
 }
