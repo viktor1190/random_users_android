@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -16,25 +17,26 @@
     </data>
 
     <FrameLayout
-        android:background="@color/colorAccent"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:onClick="@{() -> viewmodel.openUser(user.id)}">
         
         <ImageView
             android:id="@+id/image_item_user_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:profileImage="@{user.pictureThumbnailUrl}"/>
+            app:profileImage="@{user.pictureMediumUrl}"
+            tools:src="@tools:sample/avatars"/>
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="@dimen/list_item_padding"
+            android:layout_marginStart="@dimen/list_item_padding"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:text="@{user.titleForList}" />
+            android:text="@{user.titleForList}"
+            tools:text="@tools:sample/full_names"/>
     </FrameLayout>
 </layout>

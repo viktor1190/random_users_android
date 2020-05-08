@@ -16,6 +16,6 @@ interface RandomUserApi {
     suspend fun getUsers(
             @Query("page") page: Int? = null,
             @Query("seed") seed: String? = null,
-            @Query("results") limit: Int = 50
+            @Query("results") limit: Int = 52
     ): Result<BaseResponse>
 }

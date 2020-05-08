@@ -66,7 +66,7 @@ class UserListFragment : DaggerFragment() {
     }
 
     private fun setupNavigation() {
-        viewModel.openUserEvent.observe(this, EventObserver {
+        viewModel.openUserEvent.observe(viewLifecycleOwner, EventObserver {
             openUserDetails(it)
         })
     }
@@ -81,6 +81,7 @@ class UserListFragment : DaggerFragment() {
         if (viewModel != null) {
             listAdapter = UsersAdapter(viewModel)
             viewDataBinding.usersList.adapter = listAdapter
+            viewDataBinding.usersList.layoutManager = GridAutoFitLayoutManager(requireActivity(), 120)
         } else {
             Timber.w("ViewModel not initialized when attempting to set up adapter.")
         }
