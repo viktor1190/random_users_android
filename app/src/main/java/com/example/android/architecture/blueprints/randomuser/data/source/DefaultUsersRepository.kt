@@ -19,8 +19,8 @@ import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.Result.Error
 import com.example.android.architecture.blueprints.randomuser.data.Result.Success
 import com.example.android.architecture.blueprints.randomuser.data.User
-import com.example.android.architecture.blueprints.randomuser.di.ApplicationModule.UsersLocalDataSource
-import com.example.android.architecture.blueprints.randomuser.di.ApplicationModule.UsersRemoteDataSource
+import com.example.android.architecture.blueprints.randomuser.di.ApplicationModule.LocalDataSource
+import com.example.android.architecture.blueprints.randomuser.di.ApplicationModule.RemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -38,8 +38,8 @@ import javax.inject.Inject
  * data source fails. Remote is the source of truth.
  */
 class DefaultUsersRepository @Inject constructor(
-        @UsersRemoteDataSource private val usersRemoteDataSource: UsersDataSource,
-        @UsersLocalDataSource private val usersLocalDataSource: UsersDataSource,
+        @RemoteDataSource private val usersRemoteDataSource: UsersDataSource,
+        @LocalDataSource private val usersLocalDataSource: UsersDataSource,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UsersRepository {
 
@@ -78,7 +78,7 @@ class DefaultUsersRepository @Inject constructor(
         // Remote first
         val remoteUsers = usersRemoteDataSource.getUsers()
         when (remoteUsers) {
-            is Error -> Timber.w("Remote data source fetch failed")
+            is Error -> Timber.w("Remote data source fetch failed: ${remoteUsers.exception}")
             is Success -> {
                 return remoteUsers
             }

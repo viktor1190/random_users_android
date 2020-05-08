@@ -16,57 +16,38 @@
 package com.example.android.architecture.blueprints.randomuser.data.source.remote
 
 import com.example.android.architecture.blueprints.randomuser.data.Result
-import com.example.android.architecture.blueprints.randomuser.data.Result.Error
-import com.example.android.architecture.blueprints.randomuser.data.Result.Success
 import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.data.source.UsersDataSource
-import kotlinx.coroutines.delay
+import com.example.android.architecture.blueprints.randomuser.data.source.remote.response.BaseResponse
+import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.RandomUserApi
+import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.ResponseDataMapper
+import com.example.android.architecture.blueprints.randomuser.data.succeeded
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Implementation of the data source that adds a latency simulating network.
  */
-object UsersRemoteDataSource : UsersDataSource {
+@Singleton
+class UsersRemoteDataSource @Inject constructor(
+        private val usersApi: RandomUserApi,
+        private val mapper: ResponseDataMapper<BaseResponse, List<User>>
+) : UsersDataSource {
 
-    private const val SERVICE_LATENCY_IN_MILLIS = 2000L
-    private var USERS_SERVICE_DATA = LinkedHashMap<String, User>(2)
-
-    init {
-        val user1 = User("1", "user1", "victor", "valencia", "cytrux@gmail.com", "55555",
-                "33333", "male", "https://randomuser.me/api/portraits/thumb/men/75.jpg", "", "")
-        USERS_SERVICE_DATA.put(user1.id, user1)
-        val user2 = User("2", "user2", "Jhon", "Doe", "jhondoe@gmail.com", "55555",
-                "33333", "male", "https://randomuser.me/api/portraits/thumb/men/75.jpg", "", "")
-        USERS_SERVICE_DATA.put(user2.id, user2)
-    }
-
-    /**
-     * Note: [LoadTasksCallback.onDataNotAvailable] is never fired. In a real remote data
-     * source implementation, this would be fired if the server can't be contacted or the server
-     * returns an error.
-     */
     override suspend fun getUsers(): Result<List<User>> {
-        // Simulate network by delaying the execution.
-        val users = USERS_SERVICE_DATA.values.toList()
-        delay(SERVICE_LATENCY_IN_MILLIS)
-        return Success(users)
+        val result = usersApi.getUsers()
+        return if (result.succeeded) {
+            val data = (result as Result.Success).data
+            Result.Success(mapper.mapToModel(data))
+        } else
+            result as Result.Error
     }
 
-    /**
-     * Note: [GetTaskCallback.onDataNotAvailable] is never fired. In a real remote data
-     * source implementation, this would be fired if the server can't be contacted or the server
-     * returns an error.
-     */
     override suspend fun getUser(userId: String): Result<User> {
-
-        // Simulate network by delaying the execution.
-        delay(SERVICE_LATENCY_IN_MILLIS)
-        USERS_SERVICE_DATA[userId]?.let {
-            return Success(it)
-        }
-        return Error(Exception("User not found"))
+        TODO("this feature isn't supported by the API")
     }
 
     override suspend fun deleteUser(userId: String) {
-        USERS_SERVICE_DATA.remove(userId)
+        TODO("this feature isn't supported by the API")
     }
 }

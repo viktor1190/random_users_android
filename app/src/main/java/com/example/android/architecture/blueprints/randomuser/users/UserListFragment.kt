@@ -63,8 +63,6 @@ class UserListFragment : DaggerFragment() {
         setupListAdapter()
         setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.usersList)
         setupNavigation()
-
-        viewModel.loadUsers(true)
     }
 
     private fun setupNavigation() {

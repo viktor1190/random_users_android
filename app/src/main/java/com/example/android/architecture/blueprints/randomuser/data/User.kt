@@ -38,5 +38,5 @@ data class User @JvmOverloads constructor(
 ) {
 
     val titleForList: String
-        get() = if (userName.isNotEmpty()) userName else firstName + lastName
+        get() = "$firstName $lastName"
 }

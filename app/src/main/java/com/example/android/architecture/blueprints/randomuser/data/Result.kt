@@ -25,7 +25,7 @@ import com.example.android.architecture.blueprints.randomuser.data.Result.Succes
 sealed class Result<out R> {
 
     data class Success<out T>(val data: T) : Result<T>()
-    data class Error(val exception: Exception) : Result<Nothing>()
+    data class Error(val exception: Exception, val code: Int? = null) : Result<Nothing>()
     object Loading : Result<Nothing>()
 
     override fun toString(): String {

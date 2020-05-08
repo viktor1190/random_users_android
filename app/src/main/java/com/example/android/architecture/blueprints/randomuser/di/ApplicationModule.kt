@@ -24,11 +24,18 @@ import com.example.android.architecture.blueprints.randomuser.data.source.UsersR
 import com.example.android.architecture.blueprints.randomuser.data.source.local.UsersDatabase
 import com.example.android.architecture.blueprints.randomuser.data.source.local.UsersLocalDataSource
 import com.example.android.architecture.blueprints.randomuser.data.source.remote.UsersRemoteDataSource
+import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.BaseResponseDataMapper
+import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.RandomUserApi
+import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.ResultDataCallAdapterFactory
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlin.annotation.AnnotationRetention.RUNTIME
@@ -39,23 +46,23 @@ object ApplicationModule {
 
     @Qualifier
     @Retention(RUNTIME)
-    annotation class UsersRemoteDataSource
+    annotation class RemoteDataSource
 
     @Qualifier
     @Retention(RUNTIME)
-    annotation class UsersLocalDataSource
+    annotation class LocalDataSource
 
     @JvmStatic
     @Singleton
-    @UsersRemoteDataSource
+    @RemoteDataSource
     @Provides
-    fun provideUsersRemoteDataSource(): UsersDataSource {
-        return UsersRemoteDataSource
+    fun provideUsersRemoteDataSource(randomUserApi: RandomUserApi, mapper: BaseResponseDataMapper): UsersDataSource {
+        return UsersRemoteDataSource(randomUserApi, mapper)
     }
 
     @JvmStatic
     @Singleton
-    @UsersLocalDataSource
+    @LocalDataSource
     @Provides
     fun provideUsersLocalDataSource(
             database: UsersDatabase,
@@ -71,9 +78,9 @@ object ApplicationModule {
     @Provides
     fun provideDataBase(context: Context): UsersDatabase {
         return Room.databaseBuilder(
-            context.applicationContext,
-            UsersDatabase::class.java,
-            "Users.db"
+                context.applicationContext,
+                UsersDatabase::class.java,
+                "Users.db"
         ).build()
     }
 
@@ -81,6 +88,27 @@ object ApplicationModule {
     @Singleton
     @Provides
     fun provideIoDispatcher() = Dispatchers.IO
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideRetrofitInstance(): Retrofit {
+        val okHttpClient = OkHttpClient.Builder()
+                .addNetworkInterceptor(StethoInterceptor())
+                .build()
+
+        return Retrofit.Builder()
+                .client(okHttpClient)
+                .addCallAdapterFactory(ResultDataCallAdapterFactory())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://randomuser.me/")
+                .build()
+    }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideRandomUserApi(retrofit: Retrofit) = retrofit.create(RandomUserApi::class.java)
 }
 
 @Module
