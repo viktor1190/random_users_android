@@ -19,7 +19,7 @@ import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
 
 /**
- * Main entry point for accessing users data.
+ * Main entry point for accessing users data from local storage.
  */
 interface UsersDataSource {
 
@@ -28,4 +28,12 @@ interface UsersDataSource {
     suspend fun getUser(userId: String): Result<User>
 
     suspend fun deleteUser(userId: String)
+}
+
+/**
+ * Main entry point for accessing users data from the remote data source
+ */
+interface UsersRemoteDataSource {
+
+    suspend fun getUsers(page: Int, pageSize: Int): Result<List<User>>
 }

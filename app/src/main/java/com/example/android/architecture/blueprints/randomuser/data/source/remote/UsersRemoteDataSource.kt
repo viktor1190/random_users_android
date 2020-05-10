@@ -17,7 +17,7 @@ package com.example.android.architecture.blueprints.randomuser.data.source.remot
 
 import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
-import com.example.android.architecture.blueprints.randomuser.data.source.UsersDataSource
+import com.example.android.architecture.blueprints.randomuser.data.source.UsersRemoteDataSource
 import com.example.android.architecture.blueprints.randomuser.data.source.remote.response.BaseResponse
 import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.RandomUserApi
 import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.ResponseDataMapper
@@ -29,25 +29,26 @@ import javax.inject.Singleton
  * Implementation of the data source that adds a latency simulating network.
  */
 @Singleton
-class UsersRemoteDataSource @Inject constructor(
+class UsersRemoteDataSourceImpl @Inject constructor(
         private val usersApi: RandomUserApi,
         private val mapper: ResponseDataMapper<BaseResponse, List<User>>
-) : UsersDataSource {
+) : UsersRemoteDataSource {
 
-    override suspend fun getUsers(): Result<List<User>> {
-        val result = usersApi.getUsers()
+    private var seed: String? = null
+
+    override suspend fun getUsers(page: Int, pageSize: Int): Result<List<User>> {
+        val result = usersApi.getUsers(
+                page = page,
+                limit = pageSize,
+                seed = seed
+        )
         return if (result.succeeded) {
             val data = (result as Result.Success).data
+            result.data.info.seed?.let {
+                this.seed = it
+            }
             Result.Success(mapper.mapToModel(data))
         } else
             result as Result.Error
-    }
-
-    override suspend fun getUser(userId: String): Result<User> {
-        TODO("this feature isn't supported by the API")
-    }
-
-    override suspend fun deleteUser(userId: String) {
-        TODO("this feature isn't supported by the API")
     }
 }

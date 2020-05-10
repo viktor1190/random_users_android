@@ -20,13 +20,15 @@ import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
 
 /**
- * Interface to the data layer.
+ * Facade interface to the data layer.
  */
 interface UsersRepository {
 
-    suspend fun getUsers(forceUpdate: Boolean = false): Result<List<User>>
+    suspend fun getSavedUsers(): Result<List<User>>
 
-    suspend fun getUser(userId: String, forceUpdate: Boolean = false): Result<User>
+    suspend fun getNewUsers(page: Int, pageSize: Int): Result<List<User>>
+
+    suspend fun getUser(userId: String): Result<User>
 
     suspend fun deleteUser(userId: String)
 }

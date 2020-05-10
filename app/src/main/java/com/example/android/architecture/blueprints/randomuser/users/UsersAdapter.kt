@@ -17,8 +17,9 @@ package com.example.android.architecture.blueprints.randomuser.users
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.databinding.UserItemBinding
@@ -27,12 +28,16 @@ import com.example.android.architecture.blueprints.randomuser.users.UsersAdapter
 /**
  * Adapter for the user list. Has a reference to the [UserListViewModel] to send actions back to it.
  */
-class UsersAdapter(private val viewModel: UserListViewModel) : ListAdapter<User, ViewHolder>(UserDiffCallback()) {
+class UsersAdapter(private val viewModel: UserListViewModel) : PagedListAdapter<User, ViewHolder>(UserDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
 
-        holder.bind(viewModel, item)
+        if (item != null) {
+            holder.bind(viewModel, item)
+        } else {
+            Toast.makeText(holder.itemView.context, "No more users to show", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

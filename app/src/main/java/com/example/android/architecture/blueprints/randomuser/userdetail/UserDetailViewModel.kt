@@ -70,7 +70,7 @@ class UserDetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             if (userId != null) {
-                usersRepository.getUser(userId, false).let { result ->
+                usersRepository.getUser(userId).let { result ->
                     if (result is Success) {
                         onUserLoaded(result.data)
                     } else {

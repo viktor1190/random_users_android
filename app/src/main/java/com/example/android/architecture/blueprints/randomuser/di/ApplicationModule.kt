@@ -20,10 +20,11 @@ import android.content.Context
 import androidx.room.Room
 import com.example.android.architecture.blueprints.randomuser.data.source.DefaultUsersRepository
 import com.example.android.architecture.blueprints.randomuser.data.source.UsersDataSource
+import com.example.android.architecture.blueprints.randomuser.data.source.UsersRemoteDataSource
 import com.example.android.architecture.blueprints.randomuser.data.source.UsersRepository
 import com.example.android.architecture.blueprints.randomuser.data.source.local.UsersDatabase
 import com.example.android.architecture.blueprints.randomuser.data.source.local.UsersLocalDataSource
-import com.example.android.architecture.blueprints.randomuser.data.source.remote.UsersRemoteDataSource
+import com.example.android.architecture.blueprints.randomuser.data.source.remote.UsersRemoteDataSourceImpl
 import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.BaseResponseDataMapper
 import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.RandomUserApi
 import com.example.android.architecture.blueprints.randomuser.data.source.remote.retrofit.ResultDataCallAdapterFactory
@@ -56,8 +57,8 @@ object ApplicationModule {
     @Singleton
     @RemoteDataSource
     @Provides
-    fun provideUsersRemoteDataSource(randomUserApi: RandomUserApi, mapper: BaseResponseDataMapper): UsersDataSource {
-        return UsersRemoteDataSource(randomUserApi, mapper)
+    fun provideUsersRemoteDataSource(randomUserApi: RandomUserApi, mapper: BaseResponseDataMapper): UsersRemoteDataSource {
+        return UsersRemoteDataSourceImpl(randomUserApi, mapper)
     }
 
     @JvmStatic
