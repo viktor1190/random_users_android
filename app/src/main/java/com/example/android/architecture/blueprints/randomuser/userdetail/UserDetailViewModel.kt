@@ -52,6 +52,13 @@ class UserDetailViewModel @Inject constructor(
     private val userId: String?
         get() = _user.value?.id
 
+    fun saveUser() = viewModelScope.launch {
+        val user = user.value
+        user?.let {
+            val result = usersRepository.saveUser(it)
+            // TODO victor.valencia manage the result for exceptions
+        }
+    }
 
     fun deleteUser() = viewModelScope.launch {
         userId?.let {

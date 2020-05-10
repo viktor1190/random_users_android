@@ -17,6 +17,7 @@
 package com.example.android.architecture.blueprints.randomuser
 
 import com.example.android.architecture.blueprints.randomuser.di.DaggerApplicationComponent
+import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import timber.log.Timber
@@ -35,6 +36,9 @@ open class MyApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) Timber.plant(DebugTree())
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+            Stetho.initializeWithDefaults(this)
+        }
     }
 }

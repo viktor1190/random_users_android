@@ -53,6 +53,19 @@ class UsersLocalDataSource internal constructor(
         }
     }
 
+    override suspend fun saveUser(user: User): Result<Long> = withContext(ioDispatcher) {
+        try {
+            val long = usersDao.insertUser(user)
+            if (long != null) {
+                return@withContext Success(long)
+            } else {
+                return@withContext Error(java.lang.Exception("User couldn't be saved"))
+            }
+        } catch (e: java.lang.Exception) {
+            return@withContext Error(e)
+        }
+    }
+
     override suspend fun deleteUser(userId: String) {
         usersDao.deleteUserById(userId)
     }

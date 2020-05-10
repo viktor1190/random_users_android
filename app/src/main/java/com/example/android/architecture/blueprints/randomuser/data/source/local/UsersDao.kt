@@ -17,6 +17,8 @@
 package com.example.android.architecture.blueprints.randomuser.data.source.local
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.android.architecture.blueprints.randomuser.data.User
 
@@ -42,6 +44,15 @@ interface UsersDao {
      */
     @Query("SELECT * FROM User WHERE id = :userId")
     suspend fun getUserById(userId: String): User?
+
+
+    /**
+     * Delete a user by id.
+     *
+     * @return the number of users deleted. This should always be 1.
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUser(user: User): Long
 
 
     /**

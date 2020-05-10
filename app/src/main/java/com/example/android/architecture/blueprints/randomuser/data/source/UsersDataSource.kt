@@ -27,6 +27,8 @@ interface UsersDataSource {
 
     suspend fun getUser(userId: String): Result<User>
 
+    suspend fun saveUser(user: User): Result<Long>
+
     suspend fun deleteUser(userId: String)
 }
 

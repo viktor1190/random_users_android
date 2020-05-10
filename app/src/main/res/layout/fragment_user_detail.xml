@@ -101,6 +101,16 @@
                         app:layout_constraintTop_toBottomOf="@id/task_detail_title"
                         tools:text="@tools:sample/us_phones" />
 
+                    <Button
+                        android:id="@+id/button_favorites"
+                        android:text="Test button to save user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> viewmodel.saveUser()}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/task_detail_description" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </com.example.android.architecture.blueprints.randomuser.ScrollChildSwipeRefreshLayout>

@@ -52,6 +52,12 @@ class DefaultUsersRepository @Inject constructor(
         }
     }
 
+    override suspend fun saveUser(user: User): Result<Long> {
+        return withContext(ioDispatcher) {
+            return@withContext usersLocalDataSource.saveUser(user)
+        }
+    }
+
     override suspend fun deleteUser(userId: String) {
         coroutineScope {
             launch { usersLocalDataSource.deleteUser(userId) }
