@@ -36,7 +36,7 @@
             android:layout_marginEnd="@dimen/list_item_padding"
             android:layout_marginStart="@dimen/list_item_padding"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:text="@{user.titleForList}"
+            android:text="@{user.fullName}"
             tools:text="@tools:sample/full_names"/>
     </FrameLayout>
 </layout>

@@ -15,7 +15,10 @@
  */
 package com.example.android.architecture.blueprints.randomuser.userdetail
 
+import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,13 +27,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.android.architecture.blueprints.randomuser.EventObserver
 import com.example.android.architecture.blueprints.randomuser.R
+import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.databinding.FragmentUserDetailBinding
+import com.example.android.architecture.blueprints.randomuser.users.getImageContactAsByteArray
 import com.example.android.architecture.blueprints.randomuser.util.setupRefreshLayout
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -54,13 +61,19 @@ class UserDetailFragment : DaggerFragment() {
     }
 
     private fun setupNavigation() {
-        viewModel.deleteUserCommand.observe(this, EventObserver {
+        viewModel.deleteUserCommand.observe(viewLifecycleOwner, EventObserver {
             val action = UserDetailFragmentDirections.actionUserDetailFragmentToUserListFragment()
             findNavController().navigate(action)
         })
     }
 
     private fun setupFab() {
+        viewModel.addUserToContactsCommand.observe(viewLifecycleOwner, EventObserver {
+            viewModel.user.value?.let {
+                createContactFromUserIntent(it)
+            }
+
+        })
         activity?.findViewById<View>(R.id.fab_add_contacts)?.setOnClickListener {
             viewModel.addUserToContacts()
         }
@@ -95,5 +108,27 @@ class UserDetailFragment : DaggerFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.userdetail_fragment_menu, menu)
+    }
+
+    private fun createContactFromUserIntent(user: User) {
+        lifecycleScope.launch {
+            // Attaching the photo for the contacts app
+            val imageData = ArrayList<ContentValues>()
+            val row = ContentValues()
+            row.put(ContactsContract.Contacts.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+            row.put(ContactsContract.CommonDataKinds.Photo.PHOTO, user.getImageContactAsByteArray(requireContext()))
+            imageData.add(row)
+            // Creating the contact intent
+            val intent = Intent(ContactsContract.Intents.Insert.ACTION).apply {
+                type = ContactsContract.RawContacts .CONTENT_TYPE
+                putExtra(ContactsContract.Intents.Insert.NAME, user.fullName)
+                putExtra(ContactsContract.Intents.Insert.EMAIL, user.email)
+                putExtra(ContactsContract.Intents.Insert.PHONE, user.phone)
+                putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE, user.cellphone)
+                putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, imageData)
+            }
+
+            startActivity(intent)
+        }
     }
 }
