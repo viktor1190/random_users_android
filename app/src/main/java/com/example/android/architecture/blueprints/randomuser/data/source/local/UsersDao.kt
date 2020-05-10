@@ -16,6 +16,7 @@
 
 package com.example.android.architecture.blueprints.randomuser.data.source.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -34,7 +35,7 @@ interface UsersDao {
      * @return all users.
      */
     @Query("SELECT * FROM User")
-    suspend fun getUsers(): List<User>
+    fun getUsers(): LiveData<List<User>>
 
     /**
      * Select a user by id.

@@ -1,5 +1,6 @@
 package com.example.android.architecture.blueprints.randomuser.data.source
 
+import androidx.lifecycle.LiveData
 import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.di.ApplicationModule.LocalDataSource
@@ -24,9 +25,7 @@ class DefaultUsersRepository @Inject constructor(
      */
     private var memoryCachedUsers: ConcurrentMap<String, User>? = null
 
-    override suspend fun getSavedUsers(): Result<List<User>> {
-        return withContext(ioDispatcher) { usersLocalDataSource.getUsers() }
-    }
+    override fun getSavedUsers(): LiveData<List<User>> = usersLocalDataSource.getUsers()
 
     override suspend fun getNewUsers(page: Int, pageSize: Int): Result<List<User>> {
         return withContext(ioDispatcher) {
@@ -65,7 +64,6 @@ class DefaultUsersRepository @Inject constructor(
     }
 
     private fun refreshCache(users: List<User>) {
-        memoryCachedUsers?.clear()
         users.sortedBy { it.id }.forEach {
             cacheAndPerform(it) {}
         }

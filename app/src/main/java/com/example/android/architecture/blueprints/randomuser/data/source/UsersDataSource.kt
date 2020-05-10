@@ -15,6 +15,7 @@
  */
 package com.example.android.architecture.blueprints.randomuser.data.source
 
+import androidx.lifecycle.LiveData
 import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
 
@@ -23,7 +24,7 @@ import com.example.android.architecture.blueprints.randomuser.data.User
  */
 interface UsersDataSource {
 
-    suspend fun getUsers(): Result<List<User>>
+    fun getUsers(): LiveData<List<User>>
 
     suspend fun getUser(userId: String): Result<User>
 

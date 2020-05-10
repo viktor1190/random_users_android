@@ -12,8 +12,6 @@ import com.example.android.architecture.blueprints.randomuser.Event
 import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.data.source.UsersRepository
-import com.example.android.architecture.blueprints.randomuser.data.succeeded
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -38,9 +36,8 @@ class UserListViewModel @Inject constructor(val usersRepository: UsersRepository
     private val _openUserEvent = MutableLiveData<Event<String>>()
     val openUserEvent: LiveData<Event<String>> = _openUserEvent
 
-    private val _savedUsers = MutableLiveData<List<User>>().apply { value = emptyList() }
-    val savedUsers: LiveData<List<User>> = _savedUsers
-    val emptySavedUsers: LiveData<Boolean> = Transformations.map(_savedUsers) {
+    val savedUsers: LiveData<List<User>> = usersRepository.getSavedUsers()
+    val emptySavedUsers: LiveData<Boolean> = Transformations.map(savedUsers) {
         it.isEmpty()
     }
 
@@ -64,19 +61,6 @@ class UserListViewModel @Inject constructor(val usersRepository: UsersRepository
                     }
                 })
                 .build()
-        loadSavedUsers()
-    }
-
-    private fun loadSavedUsers() {
-        viewModelScope.launch {
-            val savedUsersResult = usersRepository.getSavedUsers()
-
-            if (savedUsersResult.succeeded) {
-                _savedUsers.value = (savedUsersResult as Result.Success).data
-            } else {
-                // TODO victor.valencia manage local data storage exceptions
-            }
-        }
     }
 
     /**
