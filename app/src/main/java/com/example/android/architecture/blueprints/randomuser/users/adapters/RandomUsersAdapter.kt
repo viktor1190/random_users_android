@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.architecture.blueprints.randomuser.users
+package com.example.android.architecture.blueprints.randomuser.users.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -23,7 +23,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.databinding.UserItemBinding
-import com.example.android.architecture.blueprints.randomuser.users.UsersAdapter.ViewHolder
+import com.example.android.architecture.blueprints.randomuser.users.UserListViewModel
+import com.example.android.architecture.blueprints.randomuser.users.adapters.UsersAdapter.ViewHolder
 
 /**
  * Adapter for the user list. Has a reference to the [UserListViewModel] to send actions back to it.

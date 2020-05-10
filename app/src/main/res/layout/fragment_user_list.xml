@@ -36,29 +36,57 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/tasksLL"
+                    android:id="@+id/tasksLLSaved"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="@{viewmodel.empty ? View.GONE : View.VISIBLE}">
+                    android:visibility="@{viewmodel.emptySavedUsers ? View.GONE : View.VISIBLE}">
 
-<!--                    <TextView-->
-<!--                        android:id="@+id/filteringLabel"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="@dimen/list_item_padding"-->
-<!--                        android:layout_marginTop="@dimen/activity_vertical_margin"-->
-<!--                        android:layout_marginRight="@dimen/list_item_padding"-->
-<!--                        android:layout_marginBottom="@dimen/activity_vertical_margin"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:text="NEED TO DELETE THIS?"-->
-<!--                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />-->
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/users_list"
+                    <TextView
+                        android:id="@+id/SavedUsersLabel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:items="@{viewmodel.items}" />
+                        android:layout_marginLeft="@dimen/list_item_padding"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginRight="@dimen/list_item_padding"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:gravity="center_vertical"
+                        android:text="Saved Users"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/saved_users_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:setSavedUsersItems="@{viewmodel.savedUsers}" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tasksLLRandom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/tasksLLSaved"
+                    android:visibility="@{viewmodel.emptyRandomUsers ? View.GONE : View.VISIBLE}">
+
+                    <TextView
+                        android:id="@+id/RandomUsersLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/list_item_padding"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginRight="@dimen/list_item_padding"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:gravity="center_vertical"
+                        android:text="Random users from API"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:visibility="@{viewmodel.emptySavedUsers ? View.GONE : View.VISIBLE}" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/random_users_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:items="@{viewmodel.randomUsers}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -67,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:orientation="vertical"
-                    android:visibility="@{viewmodel.empty ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{viewmodel.emptyRandomUsers ? View.VISIBLE : View.GONE}">
 
                     <ImageView
                         android:id="@+id/noTasksIcon"

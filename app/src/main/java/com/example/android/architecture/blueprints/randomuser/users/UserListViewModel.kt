@@ -12,14 +12,19 @@ import com.example.android.architecture.blueprints.randomuser.Event
 import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.data.source.UsersRepository
+import com.example.android.architecture.blueprints.randomuser.data.succeeded
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
  * ViewModel for the user list screen.
  */
-class UserListViewModel @Inject constructor(usersRepository: UsersRepository) : ViewModel() {
+class UserListViewModel @Inject constructor(val usersRepository: UsersRepository) : ViewModel() {
 
-    val items: LiveData<PagedList<User>>
+    val randomUsers: LiveData<PagedList<User>>
+    // This LiveData depends on another so we can use a transformation.
+    private val _empty: MutableLiveData<Boolean> = MutableLiveData()
+    val emptyRandomUsers: LiveData<Boolean> = _empty
 
     private val _liveDataSource: MutableLiveData<PageKeyedDataSource<Int, User>>
 
@@ -33,9 +38,11 @@ class UserListViewModel @Inject constructor(usersRepository: UsersRepository) : 
     private val _openUserEvent = MutableLiveData<Event<String>>()
     val openUserEvent: LiveData<Event<String>> = _openUserEvent
 
-    // This LiveData depends on another so we can use a transformation.
-    private val _empty: MutableLiveData<Boolean> = MutableLiveData()
-    val empty: LiveData<Boolean> = _empty
+    private val _savedUsers = MutableLiveData<List<User>>().apply { value = emptyList() }
+    val savedUsers: LiveData<List<User>> = _savedUsers
+    val emptySavedUsers: LiveData<Boolean> = Transformations.map(_savedUsers) {
+        it.isEmpty()
+    }
 
     init {
         val dataSourceFactory = UserRemoteDataSourceFactory(usersRepository, viewModelScope, _requestStatusObserver)
@@ -46,7 +53,7 @@ class UserListViewModel @Inject constructor(usersRepository: UsersRepository) : 
                 .setPageSize(PAGE_SIZE)
                 .setPrefetchDistance(3)
                 .build()
-        items = LivePagedListBuilder(dataSourceFactory, pagedListConfig)
+        randomUsers = LivePagedListBuilder(dataSourceFactory, pagedListConfig)
                 .setBoundaryCallback(object : PagedList.BoundaryCallback<User>() {
                     override fun onZeroItemsLoaded() {
                         _empty.value = false
@@ -57,6 +64,19 @@ class UserListViewModel @Inject constructor(usersRepository: UsersRepository) : 
                     }
                 })
                 .build()
+        loadSavedUsers()
+    }
+
+    private fun loadSavedUsers() {
+        viewModelScope.launch {
+            val savedUsersResult = usersRepository.getSavedUsers()
+
+            if (savedUsersResult.succeeded) {
+                _savedUsers.value = (savedUsersResult as Result.Success).data
+            } else {
+                // TODO victor.valencia manage local data storage exceptions
+            }
+        }
     }
 
     /**
