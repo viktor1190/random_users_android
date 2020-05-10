@@ -3,6 +3,4 @@ package com.example.android.architecture.blueprints.randomuser.data.source.remot
 data class Id (
 	val name : String,
 	val value : String
-) {
-	fun getUserId() = "$name-$value"
-}
+)

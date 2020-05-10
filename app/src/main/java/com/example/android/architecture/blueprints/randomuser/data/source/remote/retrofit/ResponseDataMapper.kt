@@ -23,7 +23,7 @@ class UsersResponseDataMapper @Inject constructor() : ResponseDataMapper<UserRes
 
     override fun mapToModel(response: UserResponse): User {
         return User(
-                response.id.getUserId(),
+                response.getUserId(),
                 response.login.username,
                 response.name.first,
                 response.name.last,

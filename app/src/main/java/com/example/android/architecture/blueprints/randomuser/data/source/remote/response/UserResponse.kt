@@ -12,4 +12,6 @@ data class UserResponse (
         val id : Id,
         val picture : Picture,
         val nat : String
-)
+) {
+    fun getUserId() = login.uuid
+}

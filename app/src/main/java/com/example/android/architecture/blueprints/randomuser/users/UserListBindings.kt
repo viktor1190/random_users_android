@@ -16,7 +16,7 @@ fun setItems(listView: RecyclerView, items: PagedList<User>?) {
 }
 
 @BindingAdapter("app:profileImage")
-fun loadImage(view: ImageView, imageUrl: String) {
+fun loadImage(view: ImageView, imageUrl: String?) {
     Glide.with(view.context)
             .load(imageUrl)
             .into(view)
