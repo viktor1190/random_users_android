@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2019 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.android.architecture.blueprints.randomuser.data.source
 
 import com.example.android.architecture.blueprints.randomuser.data.Result
@@ -24,6 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 import javax.inject.Inject
 
 class DefaultUsersRepository @Inject constructor(
@@ -32,21 +19,64 @@ class DefaultUsersRepository @Inject constructor(
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UsersRepository {
 
+    /**
+     * This cache is used to store only the users coming from the network, in this way the user can get into the details of the selected contact
+     */
+    private var memoryCachedUsers: ConcurrentMap<String, User>? = null
+
     override suspend fun getSavedUsers(): Result<List<User>> {
         return withContext(ioDispatcher) { usersLocalDataSource.getUsers() }
     }
 
     override suspend fun getNewUsers(page: Int, pageSize: Int): Result<List<User>> {
-        return withContext(ioDispatcher) { usersRemoteDataSource.getUsers(page, pageSize) }
+        return withContext(ioDispatcher) {
+            val newUsers = usersRemoteDataSource.getUsers(page, pageSize)
+
+            // Refresh the cache with the new users
+            (newUsers as? Result.Success)?.let { refreshCache(it.data) }
+
+            newUsers
+        }
     }
 
     override suspend fun getUser(userId: String): Result<User> {
-        return withContext(ioDispatcher) { usersLocalDataSource.getUser(userId) }
+        return withContext(ioDispatcher) {
+
+            // first checks if the user is from cache
+            memoryCachedUsers?.get(userId)?.let {
+                return@withContext Result.Success(it)
+            }
+
+            // if the user wasn't found in the cache, it should be at the local storage
+            return@withContext usersLocalDataSource.getUser(userId)
+        }
     }
 
     override suspend fun deleteUser(userId: String) {
         coroutineScope {
             launch { usersLocalDataSource.deleteUser(userId) }
         }
+    }
+
+    private fun refreshCache(users: List<User>) {
+        memoryCachedUsers?.clear()
+        users.sortedBy { it.id }.forEach {
+            cacheAndPerform(it) {}
+        }
+    }
+
+    private fun cacheUser(user: User): User {
+        val cachedUser = user.copy()
+        // Create if it doesn't exist.
+        if (memoryCachedUsers == null) {
+            memoryCachedUsers = ConcurrentHashMap()
+        }
+        memoryCachedUsers?.put(cachedUser.id, cachedUser)
+        return cachedUser
+    }
+
+    private inline fun cacheAndPerform(user: User, perform: (User) -> Unit) {
+        val cachedUser = cacheUser(user)
+        perform(cachedUser)
     }
 }
