@@ -34,65 +34,108 @@
         android:layout_height="match_parent">
 
 
-        <com.example.android.architecture.blueprints.randomuser.ScrollChildSwipeRefreshLayout
+        <ScrollView
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:onRefreshListener="@{viewmodel::refresh}"
-            app:refreshing="@{viewmodel.dataLoading}">
+            android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/relativeLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/relativeLayout2"
+                <!-- android:paddingTop specified to temporarily work around -->
+                <!-- https://github.com/robolectric/robolectric/issues/4588 -->
+                <ImageView
+                    android:id="@+id/image_user_detail_profile"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    app:profileImage="@{viewmodel.user.pictureLargeUrl}"
+                    tools:src="@tools:sample/avatars" />
 
-                    <!-- android:paddingTop specified to temporarily work around -->
-                    <!-- https://github.com/robolectric/robolectric/issues/4588 -->
-                    <ImageView
-                        android:id="@+id/image_user_detail_profile"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/full_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/userDetailInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:profileImage="@{viewmodel.user.pictureLargeUrl}"
-                        tools:src="@tools:sample/avatars" />
-
-                    <TextView
-                        android:id="@+id/task_detail_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="1dp"
-                        android:text="@{viewmodel.user.userName}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintLeft_toRightOf="@id/image_user_detail_profile"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/image_user_detail_profile"
+                        android:enabled="false"
+                        android:lines="1"
+                        android:text="@{viewmodel.user.fullName}"
                         tools:text="@tools:sample/full_names" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:id="@+id/task_detail_description"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/userDetailInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/user_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/userDetailInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="1dp"
-                        android:text="@{viewmodel.user.phone}"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintLeft_toRightOf="@id/image_user_detail_profile"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/task_detail_title"
-                        tools:text="@tools:sample/us_phones" />
+                        android:enabled="false"
+                        android:lines="1"
+                        android:text="@{viewmodel.user.userName}"
+                        tools:text="@tools:sample/full_names" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/userDetailInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/userDetailInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:lines="1"
+                        android:text="@{viewmodel.user.email}"
+                        tools:text="@tools:sample/cities" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/userDetailInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/cellphone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/userDetailInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:lines="1"
+                        android:text="@{viewmodel.user.cellphone}"
+                        tools:text="@tools:sample/us_phones" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/userDetailInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/phone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/userDetailInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:lines="1"
+                        android:text="@{viewmodel.user.phone}"
+                        tools:text="@tools:sample/us_phones" />
+                </com.google.android.material.textfield.TextInputLayout>
+
             </LinearLayout>
-        </com.example.android.architecture.blueprints.randomuser.ScrollChildSwipeRefreshLayout>
+        </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_add_contacts"

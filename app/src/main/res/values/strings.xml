@@ -22,4 +22,9 @@
     <string name="search">Search by user name</string>
     <string name="saved_users">Favorites</string>
     <string name="random_users_from_api">Random users</string>
+    <string name="full_name">Full Name</string>
+    <string name="user_name">User Name</string>
+    <string name="email">Email</string>
+    <string name="cellphone">CellPhone</string>
+    <string name="phone">Phone</string>
 </resources>

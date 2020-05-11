@@ -13,7 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--Components-->
 
@@ -31,9 +31,14 @@
     </style>
 
     <!--List Sheets-->
-    <style name="listSection" parent="TextAppearance.MyTheme.Caption">
+    <style name="listSection" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:layout_margin">@dimen/list_item_padding</item>
         <item name="textAllCaps">true</item>
-        <item name="android:textColor">@color/green_500</item>
+        <item name="android:textColor">@color/black_800</item>
+    </style>
+
+    <!--User Detail Sheets-->
+    <style name="userDetailInfo" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/color_selector</item>
     </style>
 </resources>
