@@ -1,8 +1,10 @@
-# This is an Android project based in the Architecture Blueprints - AAC + Dagger2 + Dagger-Android
+Random users + Infinite scroll from API - Android Use Case
+![Demo](demo.gif)
 
+### This is an Android project based in the Architecture Blueprints + Dagger2 + Dagger-Android
 ### Summary
-This sample is written in Kotlin and based on the
-[master](https://github.com/googlesamples/android-architecture/tree/master) branch which uses
+This interview demo app was created in Kotlin and based in one of the templates of the Google Sample repostory at:
+[master](https://github.com/googlesamples/android-architecture/tree/master) which uses
 the following Architecture Components:
  - ViewModel
  - LiveData
