@@ -1,4 +1,5 @@
-Random users + Infinite scroll from API - Android Use Case
+# Random users + Infinite scroll from API - Android Use Case
+
 ![Demo](demo.gif)
 
 ### This is an Android project based in the Architecture Blueprints + Dagger2 + Dagger-Android
