@@ -22,7 +22,7 @@ class UsersLocalDataSource internal constructor(
 
     override suspend fun getUser(userId: String): Result<User> = withContext(ioDispatcher) {
         try {
-            val user = usersDao.getUserById(userId)
+            val user = usersDao.getUserById(userId)?.apply { isSavedAsFavorite = true }
             if (user != null) {
                 return@withContext Success(user)
             } else {
@@ -35,7 +35,7 @@ class UsersLocalDataSource internal constructor(
 
     override suspend fun saveUser(user: User): Result<Long> = withContext(ioDispatcher) {
         try {
-            val long = usersDao.insertUser(user)
+            val long = usersDao.insertUser(user.apply { isSavedAsFavorite = true })
             return@withContext Success(long)
         } catch (e: java.lang.Exception) {
             return@withContext Error(e)

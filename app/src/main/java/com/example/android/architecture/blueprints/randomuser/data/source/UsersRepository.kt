@@ -18,4 +18,6 @@ interface UsersRepository {
     suspend fun saveUser(user: User): Result<Long>
 
     suspend fun deleteUser(userId: String)
+
+    suspend fun isFavoriteUser(userId: String): Boolean
 }

@@ -19,7 +19,8 @@ data class User @JvmOverloads constructor(
         val gender: String,
         val pictureThumbnailUrl: String,
         val pictureMediumUrl: String,
-        val pictureLargeUrl: String
+        val pictureLargeUrl: String,
+        var isSavedAsFavorite: Boolean = false
 ) {
 
     val fullName: String

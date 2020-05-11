@@ -3,6 +3,7 @@ package com.example.android.architecture.blueprints.randomuser.data.source
 import androidx.lifecycle.LiveData
 import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
+import com.example.android.architecture.blueprints.randomuser.data.succeeded
 import com.example.android.architecture.blueprints.randomuser.di.ApplicationModule.LocalDataSource
 import com.example.android.architecture.blueprints.randomuser.di.ApplicationModule.RemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -41,13 +42,19 @@ class DefaultUsersRepository @Inject constructor(
     override suspend fun getUser(userId: String): Result<User> {
         return withContext(ioDispatcher) {
 
-            // first checks if the user is from cache
+            // first checks if the user is from database
+            val localUser: Result<User> = usersLocalDataSource.getUser(userId)
+            if (localUser.succeeded) {
+                return@withContext localUser
+            }
+
+
             memoryCachedUsers?.get(userId)?.let {
                 return@withContext Result.Success(it)
             }
 
-            // if the user wasn't found in the cache, it should be at the local storage
-            return@withContext usersLocalDataSource.getUser(userId)
+            // if the user wasn't found in the database, it should be at the cache
+            return@withContext Result.Error(Exception("User not found"))
         }
     }
 
@@ -61,6 +68,10 @@ class DefaultUsersRepository @Inject constructor(
         coroutineScope {
             launch { usersLocalDataSource.deleteUser(userId) }
         }
+    }
+
+    override suspend fun isFavoriteUser(userId: String): Boolean {
+        return withContext(ioDispatcher) { usersLocalDataSource.getUser(userId).succeeded }
     }
 
     private fun refreshCache(users: List<User>) {

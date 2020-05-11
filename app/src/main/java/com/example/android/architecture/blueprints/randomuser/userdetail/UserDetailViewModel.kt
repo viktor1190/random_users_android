@@ -46,14 +46,12 @@ class UserDetailViewModel @Inject constructor(
     private val _addUserToContactsCommand = MutableLiveData<Event<Unit>>()
     val addUserToContactsCommand: LiveData<Event<Unit>> = _addUserToContactsCommand
 
-    private val _deleteUserCommand = MutableLiveData<Event<Unit>>()
-    val deleteUserCommand: LiveData<Event<Unit>> = _deleteUserCommand
-
     private val userId: String?
         get() = _user.value?.id
 
     fun saveUser() = viewModelScope.launch {
         val user = user.value
+        user?.isSavedAsFavorite = true
         user?.let {
             val result = usersRepository.saveUser(it)
             // TODO victor.valencia manage the result for exceptions
@@ -61,9 +59,9 @@ class UserDetailViewModel @Inject constructor(
     }
 
     fun deleteUser() = viewModelScope.launch {
+        user.value?.isSavedAsFavorite = false
         userId?.let {
             usersRepository.deleteUser(it)
-            _deleteUserCommand.value = Event(Unit)
         }
     }
 

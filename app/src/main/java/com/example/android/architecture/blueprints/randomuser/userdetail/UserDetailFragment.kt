@@ -28,7 +28,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.android.architecture.blueprints.randomuser.EventObserver
 import com.example.android.architecture.blueprints.randomuser.R
@@ -55,14 +54,6 @@ class UserDetailFragment : DaggerFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupFab()
-        setupNavigation()
-    }
-
-    private fun setupNavigation() {
-        viewModel.deleteUserCommand.observe(viewLifecycleOwner, EventObserver {
-            val action = UserDetailFragmentDirections.actionUserDetailFragmentToUserListFragment()
-            findNavController().navigate(action)
-        })
     }
 
     private fun setupFab() {
@@ -78,9 +69,9 @@ class UserDetailFragment : DaggerFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_user_detail, container, false)
         viewDataBinding = FragmentUserDetailBinding.bind(view).apply {
@@ -96,8 +87,13 @@ class UserDetailFragment : DaggerFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_delete -> {
-                viewModel.deleteUser()
+            R.id.menu_favorite -> {
+                if (viewModel.user.value?.isSavedAsFavorite == true) {
+                    viewModel.deleteUser()
+                } else {
+                    viewModel.saveUser()
+                }
+                updateMenuDrawableState(item, viewModel.user.value?.isSavedAsFavorite == true)
                 true
             }
             else -> false
@@ -106,6 +102,8 @@ class UserDetailFragment : DaggerFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.userdetail_fragment_menu, menu)
+        val favoriteMenuItem = menu.findItem(R.id.menu_favorite)
+        updateMenuDrawableState(favoriteMenuItem, args.isFavorite)
     }
 
     private fun createContactFromUserIntent(user: User) {
@@ -118,7 +116,7 @@ class UserDetailFragment : DaggerFragment() {
             imageData.add(row)
             // Creating the contact intent
             val intent = Intent(ContactsContract.Intents.Insert.ACTION).apply {
-                type = ContactsContract.RawContacts .CONTENT_TYPE
+                type = ContactsContract.RawContacts.CONTENT_TYPE
                 putExtra(ContactsContract.Intents.Insert.NAME, user.fullName)
                 putExtra(ContactsContract.Intents.Insert.EMAIL, user.email)
                 putExtra(ContactsContract.Intents.Insert.PHONE, user.phone)
@@ -127,6 +125,16 @@ class UserDetailFragment : DaggerFragment() {
             }
 
             startActivity(intent)
+        }
+    }
+
+    private fun updateMenuDrawableState(menuItem: MenuItem, isFavorite: Boolean) {
+        if (menuItem.itemId == R.id.menu_favorite) {
+            val stateListFavoriteDrawable = resources.getDrawable(R.drawable.menu_item_favorite_selector)
+            val state = if (isFavorite) android.R.attr.state_checked else android.R.attr.state_empty
+            stateListFavoriteDrawable.setState(intArrayOf(state))
+            menuItem.setIcon(stateListFavoriteDrawable.current)
+            menuItem.isChecked = isFavorite
         }
     }
 }

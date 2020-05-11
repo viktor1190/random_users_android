@@ -17,8 +17,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_delete"
-        android:icon="@drawable/trash_icon"
+        android:id="@+id/menu_favorite"
+        android:icon="@drawable/ic_favorite_border_black_24dp"
+        android:checkable="true"
         android:title="@string/menu_delete_task"
         app:showAsAction="always" />
 </menu>

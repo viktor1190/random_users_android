@@ -44,31 +44,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin">
+                android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/relativeLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingBottom="@dimen/activity_vertical_margin">
+                    android:orientation="vertical">
 
                     <!-- android:paddingTop specified to temporarily work around -->
                     <!-- https://github.com/robolectric/robolectric/issues/4588 -->
                     <ImageView
                         android:id="@+id/image_user_detail_profile"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:paddingTop="1dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -81,7 +71,6 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="1dp"
                         android:text="@{viewmodel.user.userName}"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintLeft_toRightOf="@id/image_user_detail_profile"
                         app:layout_constraintStart_toStartOf="parent"
@@ -100,16 +89,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/task_detail_title"
                         tools:text="@tools:sample/us_phones" />
-
-                    <Button
-                        android:id="@+id/button_favorites"
-                        android:text="Test button to save user"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:onClick="@{() -> viewmodel.saveUser()}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/task_detail_description" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>

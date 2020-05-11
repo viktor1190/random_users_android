@@ -80,6 +80,10 @@ class UserListViewModel @Inject constructor(val usersRepository: UsersRepository
         }
     }
 
+    suspend fun checkIfFavoriteUser(userId: String): Boolean {
+        return usersRepository.isFavoriteUser(userId)
+    }
+
     /**
      * Called by Data Binding.
      */

@@ -18,6 +18,7 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.architecture.blueprints.randomuser.EventObserver
@@ -27,6 +28,7 @@ import com.example.android.architecture.blueprints.randomuser.databinding.Fragme
 import com.example.android.architecture.blueprints.randomuser.users.adapters.SavedUsersAdapter
 import com.example.android.architecture.blueprints.randomuser.users.adapters.UsersAdapter
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -128,8 +130,10 @@ class UserListFragment : DaggerFragment() {
     }
 
     private fun openUserDetails(userId: String) {
-        val action = UserListFragmentDirections.actionUserListFragmentToUserDetailFragment(userId)
-        findNavController().navigate(action)
+        lifecycleScope.launch {
+            val action = UserListFragmentDirections.actionUserListFragmentToUserDetailFragment(userId, viewModel.checkIfFavoriteUser(userId))
+            findNavController().navigate(action)
+        }
     }
 
     private fun setupListAdapter() {
