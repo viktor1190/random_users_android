@@ -12,6 +12,8 @@ the following Architecture Components:
  - Data Binding
  - Navigation
  - Room
+ - Paging Jetpack
+ - Coroutines for async operations
 
 It uses [Dagger 2](https://dagger.dev) and
 [Dagger-Android](https://dagger.dev/android.html) for dependency injection. The Dagger setup is
