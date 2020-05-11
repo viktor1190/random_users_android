@@ -35,7 +35,6 @@ import com.example.android.architecture.blueprints.randomuser.R
 import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.databinding.FragmentUserDetailBinding
 import com.example.android.architecture.blueprints.randomuser.users.getImageContactAsByteArray
-import com.example.android.architecture.blueprints.randomuser.util.setupRefreshLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -57,7 +56,6 @@ class UserDetailFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
         setupFab()
         setupNavigation()
-        this.setupRefreshLayout(viewDataBinding.refreshLayout)
     }
 
     private fun setupNavigation() {

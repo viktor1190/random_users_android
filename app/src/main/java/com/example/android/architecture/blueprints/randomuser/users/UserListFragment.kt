@@ -26,7 +26,6 @@ import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.databinding.FragmentUserListBinding
 import com.example.android.architecture.blueprints.randomuser.users.adapters.SavedUsersAdapter
 import com.example.android.architecture.blueprints.randomuser.users.adapters.UsersAdapter
-import com.example.android.architecture.blueprints.randomuser.util.setupRefreshLayout
 import dagger.android.support.DaggerFragment
 import timber.log.Timber
 import javax.inject.Inject
@@ -65,7 +64,6 @@ class UserListFragment : DaggerFragment() {
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
         setupListAdapter()
-        setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.randomUsersList)
         setupNavigation()
         setupHintsSearchAdapter()
     }
@@ -138,10 +136,13 @@ class UserListFragment : DaggerFragment() {
         val viewModel = viewDataBinding.viewmodel
         if (viewModel != null) {
             listAdapter = UsersAdapter(viewModel)
-            viewDataBinding.randomUsersList.adapter = listAdapter
-            viewDataBinding.randomUsersList.layoutManager = GridAutoFitLayoutManager(requireActivity(), 120)
-            viewDataBinding.savedUsersList.adapter = SavedUsersAdapter(viewModel)
-            viewDataBinding.savedUsersList.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            val randomUsersList = viewDataBinding.randomUsersList
+            val savedUsersList = viewDataBinding.savedUsersList
+            val gridLayoutManager = GridAutoFitLayoutManager(requireActivity(), 120)
+            randomUsersList.adapter = listAdapter
+            randomUsersList.layoutManager = gridLayoutManager
+            savedUsersList.adapter = SavedUsersAdapter(viewModel)
+            savedUsersList.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         } else {
             Timber.w("ViewModel not initialized when attempting to set up adapter.")
         }

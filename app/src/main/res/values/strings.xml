@@ -20,4 +20,6 @@
     <string name="no_data">No data</string>
     <string name="no_users_all">You have no users!</string>
     <string name="search">Search by user name</string>
+    <string name="saved_users">Favorites</string>
+    <string name="random_users_from_api">Random users</string>
 </resources>

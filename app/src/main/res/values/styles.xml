@@ -15,26 +15,25 @@
   -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. --><style name="AppTheme" parent="Base.AppTheme" />
+    <!--Components-->
 
-    <style name="AppTheme.OverlapSystemBar" parent="Base.AppTheme" />
-
-    <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <!-- For Android sdk versions 26+. -->
-        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/opensans_font</item>
-        <!-- Target Android sdk versions < 26 and > 14. -->
-        <item name="fontFamily">@font/opensans_font</item>
-        <!-- sets the style for the overflow button -->
-        <item name="actionOverflowButtonStyle">@style/actionOverflowButtonStyle</item>
+    <!--Bottom Sheets-->
+    <style name="ThemeOverlay.MyTheme.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/Widget.MyTheme.BottomSheet.Modal</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:navigationBarDividerColor" tools:ignore="NewApi">@android:color/transparent</item>
+    </style>
+    <style name="Widget.MyTheme.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">?attr/shapeAppearanceLargeComponent</item>
     </style>
 
-    <!-- This style defines the tint color of the overflow menu button -->
-    <style name="actionOverflowButtonStyle" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:tint">@color/colorAccent</item>
+    <!--List Sheets-->
+    <style name="listSection" parent="TextAppearance.MyTheme.Caption">
+        <item name="android:layout_margin">@dimen/list_item_padding</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textColor">@color/green_500</item>
     </style>
-
-    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

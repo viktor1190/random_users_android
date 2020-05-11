@@ -19,6 +19,7 @@
     <FrameLayout
         android:layout_width="120dp"
         android:layout_height="120dp"
+        android:padding="1dp"
         android:onClick="@{() -> viewmodel.openUser(user.id)}">
         
         <ImageView
@@ -29,13 +30,18 @@
             tools:src="@tools:sample/avatars"/>
 
         <TextView
+            android:background="@color/black_translucid"
+            android:textColor="@color/white_50"
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginEnd="@dimen/list_item_padding"
-            android:layout_marginStart="@dimen/list_item_padding"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:paddingTop="@dimen/list_item_title_vertical_padding"
+            android:paddingBottom="@dimen/list_item_title_vertical_padding"
+            android:paddingEnd="@dimen/list_item_title_horizontal_padding"
+            android:paddingStart="@dimen/list_item_title_horizontal_padding"
+            android:lines="1"
+            android:ellipsize="end"
             android:text="@{user.fullName}"
             tools:text="@tools:sample/full_names"/>
     </FrameLayout>
