@@ -19,7 +19,7 @@ const val FIRST_PAGE = 1
 class PagedUserDataSource constructor(
         private val usersRepository: UsersRepository,
         private val coroutineScope: CoroutineScope,
-        private val requestStatusObserver: MutableLiveData<Result<Nothing?>>,
+        private val requestStatusObserver: MutableLiveData<Result<List<User>>>,
         private val ioDispatcher: CoroutineDispatcher
 ): PageKeyedDataSource<Int, User>() {
 
@@ -50,8 +50,9 @@ class PagedUserDataSource constructor(
             requestStatusObserver.value = Result.Loading
             val usersResult = withContext(ioDispatcher) { usersRepository.getNewUsers(page, pageSize) }
             if (usersResult.succeeded) {
-                requestStatusObserver.value = Result.Success(null)
-                callback((usersResult as Result.Success).data)
+                val users = (usersResult as Result.Success).data
+                requestStatusObserver.value = Result.Success(users)
+                callback(users)
             } else {
                 requestStatusObserver.value = (usersResult as Result.Error).copy()
             }
@@ -62,7 +63,7 @@ class PagedUserDataSource constructor(
 class UserRemoteDataSourceFactory(
         private val usersRepository: UsersRepository,
         private val coroutineScope: CoroutineScope,
-        private val requestStatusObserver: MutableLiveData<Result<Nothing?>>,
+        private val requestStatusObserver: MutableLiveData<Result<List<User>>>,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): DataSource.Factory<Int, User>() {
 

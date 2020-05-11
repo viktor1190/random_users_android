@@ -86,7 +86,7 @@
                         android:id="@+id/random_users_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:items="@{viewmodel.randomUsers}" />
+                        app:items="@{viewmodel.randomUsersForPagedListAdapter}" />
                 </LinearLayout>
 
                 <LinearLayout

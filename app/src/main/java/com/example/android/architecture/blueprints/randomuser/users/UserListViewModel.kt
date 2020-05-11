@@ -1,6 +1,7 @@
 package com.example.android.architecture.blueprints.randomuser.users
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.example.android.architecture.blueprints.randomuser.Event
 import com.example.android.architecture.blueprints.randomuser.data.Result
 import com.example.android.architecture.blueprints.randomuser.data.User
 import com.example.android.architecture.blueprints.randomuser.data.source.UsersRepository
+import com.example.android.architecture.blueprints.randomuser.data.succeeded
 import javax.inject.Inject
 
 /**
@@ -19,7 +21,7 @@ import javax.inject.Inject
  */
 class UserListViewModel @Inject constructor(val usersRepository: UsersRepository) : ViewModel() {
 
-    val randomUsers: LiveData<PagedList<User>>
+    val randomUsersForPagedListAdapter: LiveData<PagedList<User>>
     // This LiveData depends on another so we can use a transformation.
     private val _empty: MutableLiveData<Boolean> = MutableLiveData()
     val emptyRandomUsers: LiveData<Boolean> = _empty
@@ -30,8 +32,8 @@ class UserListViewModel @Inject constructor(val usersRepository: UsersRepository
     /**
      * This private LiveData object is used to observe the request status and emmit the errors and the loading indicators.
      */
-    private val _requestStatusObserver = MutableLiveData<Result<Nothing?>>()
-    val dataLoading: LiveData<Boolean> = Transformations.map(_requestStatusObserver) { it == Result.Loading }
+    private val _randomUsersWithResultStatusObserver = MutableLiveData<Result<List<User>>>()
+    val dataLoading: LiveData<Boolean> = Transformations.map(_randomUsersWithResultStatusObserver) { it == Result.Loading }
 
     private val _openUserEvent = MutableLiveData<Event<String>>()
     val openUserEvent: LiveData<Event<String>> = _openUserEvent
@@ -41,8 +43,11 @@ class UserListViewModel @Inject constructor(val usersRepository: UsersRepository
         it.isEmpty()
     }
 
+    private val _searchSuggestions = MediatorLiveData<Map<String, String>>()
+    val searchSuggestions: LiveData<Map<String, String>> = _searchSuggestions
+
     init {
-        val dataSourceFactory = UserRemoteDataSourceFactory(usersRepository, viewModelScope, _requestStatusObserver)
+        val dataSourceFactory = UserRemoteDataSourceFactory(usersRepository, viewModelScope, _randomUsersWithResultStatusObserver)
         _liveDataSource = dataSourceFactory.getUserLiveDataSource()
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
@@ -50,8 +55,9 @@ class UserListViewModel @Inject constructor(val usersRepository: UsersRepository
                 .setPageSize(PAGE_SIZE)
                 .setPrefetchDistance(3)
                 .build()
-        randomUsers = LivePagedListBuilder(dataSourceFactory, pagedListConfig)
+        randomUsersForPagedListAdapter = LivePagedListBuilder(dataSourceFactory, pagedListConfig)
                 .setBoundaryCallback(object : PagedList.BoundaryCallback<User>() {
+
                     override fun onZeroItemsLoaded() {
                         _empty.value = false
                     }
@@ -61,6 +67,17 @@ class UserListViewModel @Inject constructor(val usersRepository: UsersRepository
                     }
                 })
                 .build()
+        _searchSuggestions.addSource(_randomUsersWithResultStatusObserver) {
+            if (it.succeeded) {
+                val users = (it as Result.Success).data
+                val mapOfUserNames = users.map { it.id to it.fullName }.toMap()
+                _searchSuggestions.value = mapOfUserNames
+            }
+        }
+        _searchSuggestions.addSource(savedUsers) {
+            val mapOfUserNames = it.map { it.id to it.fullName }.toMap()
+            _searchSuggestions.value = mapOfUserNames
+        }
     }
 
     /**
